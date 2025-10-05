@@ -18,7 +18,6 @@ function App() {
   
   const [countValues, setCountValues] = useState(statsData.map(stat => stat.start));
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isMenuOpen && !event.target.closest('.mobile-menu-toggle') && !event.target.closest('.main-nav')) {
@@ -32,7 +31,6 @@ function App() {
     };
   }, [isMenuOpen]);
 
-  // Close mobile menu when clicking on a link
   const handleNavLinkClick = () => {
     setIsMenuOpen(false);
   };
@@ -142,7 +140,7 @@ function App() {
     const dots = document.querySelectorAll('.carousel-dot');
     const scrollLeft = container.scrollLeft;
     const totalWidth = container.scrollWidth;
-    const logoSetWidth = totalWidth / 2; // Width of one set of logos
+    const logoSetWidth = totalWidth / 2;
     
     const normalizedScrollLeft = scrollLeft % logoSetWidth;
     
@@ -190,12 +188,10 @@ function App() {
     const containerWidth = container.clientWidth;
     const testimonialSetWidth = totalWidth / 2;
     
-    // When we reach the end of the first set, jump back to start
     if (scrollLeft >= testimonialSetWidth - 50) {
       container.scrollLeft = 0;
     }
     
-    // When we go backward past the start, jump to the second set
     if (scrollLeft <= 0 && container.previousScrollLeft > scrollLeft) {
       container.scrollLeft = testimonialSetWidth - containerWidth;
     }
@@ -386,25 +382,20 @@ function App() {
           <div className="client-logos-container">
             <div className="client-logos" 
               onMouseEnter={() => {
-                // Stop auto-scrolling when mouse enters
                 if (window.carouselInterval) {
                   clearInterval(window.carouselInterval);
                   window.carouselInterval = null;
                 }
               }}
               onMouseLeave={() => {
-                // Resume auto-scrolling when mouse leaves
                 if (!window.carouselInterval) {
                   window.carouselInterval = setInterval(() => {
                     const container = document.querySelector('.client-logos');
                     if (container) {
-                      // Get the width of one logo item (including gap)
                       const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190; // logo width + gap
                       
-                      // Simply scroll one logo at a time
                       container.scrollBy({ left: logoWidth, behavior: 'smooth' });
                       
-                      // Check if we need to reset position (handleInfiniteScroll will take care of the jump)
                       setTimeout(() => {
                         handleInfiniteScroll(container);
                       }, 500);
@@ -416,39 +407,30 @@ function App() {
                 }
               }}
               onScroll={(e) => {
-                // Update active dot when scrolling manually
                 updateActiveDot(e.currentTarget);
                 
-                // Handle infinite scroll effect
                 handleInfiniteScroll(e.currentTarget);
               }}
               ref={(el) => {
-                // Set up auto-scrolling when component mounts
                 if (el && !window.carouselInterval) {
-                  // Initialize previous scroll position
                   el.previousScrollLeft = 0;
                   
                   window.carouselInterval = setInterval(() => {
                     if (el) {
-                      // Get the width of one logo item (including gap)
                       const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190; // logo width + gap
                       
-                      // Simply scroll one logo at a time
                       el.scrollBy({ left: logoWidth, behavior: 'smooth' });
                       
-                      // Check if we need to reset position (handleInfiniteScroll will take care of the jump)
                       setTimeout(() => {
                         handleInfiniteScroll(el);
                       }, 500);
                       
-                      // Update active dot
                       updateActiveDot(el);
                     }
                   }, 3000);
                 }
               }}
             >
-              {/* First set of logos */}
               <div className="client-logo">
                 <div className="logo-image jnt"></div>
                 <p>J&T Express</p>
@@ -469,8 +451,8 @@ function App() {
                 <div className="logo-image pos"></div>
                 <p>POS Indonesia</p>
               </div>
-              
-              {/* Duplicate logos to create infinite loop effect */}
+
+              // Duplicate logos
               <div className="client-logo">
                 <div className="logo-image jnt"></div>
                 <p>J&T Express</p>
@@ -496,11 +478,9 @@ function App() {
             <div className="carousel-navigation">
               <button className="carousel-button prev" onClick={() => {
                 const container = document.querySelector('.client-logos');
-                // Scroll exactly one logo width to the left
                 const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
                 container.scrollBy({ left: -logoWidth, behavior: 'smooth' });
                 
-                // After scrolling, check if we need to handle the infinite loop
                 setTimeout(() => {
                   handleInfiniteScroll(container);
                   // Update active dot
@@ -525,14 +505,11 @@ function App() {
               </div>
               <button className="carousel-button next" onClick={() => {
                 const container = document.querySelector('.client-logos');
-                // Scroll exactly one logo width to the right
                 const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
                 container.scrollBy({ left: logoWidth, behavior: 'smooth' });
                 
-                // After scrolling, check if we need to handle the infinite loop
                 setTimeout(() => {
                   handleInfiniteScroll(container);
-                  // Update active dot
                   updateActiveDot(container);
                 }, 500);
               }}>&gt;</button>
@@ -550,7 +527,6 @@ function App() {
           <div className="map-container">
             <div className="world-map"></div>
             
-            {/* Connection lines between points */}
             <div className="network-connections">
               {/* Americas to Europe */}
               <div className="connection-line" style={{
@@ -602,7 +578,6 @@ function App() {
             </div>
             
             <div className="network-points">
-              {/* These would be positioned absolutely in CSS */}
               <div className="network-point" style={{top: '30%', left: '20%'}}><span>Americas</span></div>
               <div className="network-point" style={{top: '25%', left: '48%'}}><span>Europe</span></div>
               <div className="network-point" style={{top: '35%', left: '70%'}}><span>Asia</span></div>
@@ -621,14 +596,12 @@ function App() {
           <div className="testimonial-carousel-container">
             <div className="testimonial-carousel"
                  onMouseEnter={() => {
-                   // Stop auto-scrolling when mouse enters
                    if (window.testimonialInterval) {
                      clearInterval(window.testimonialInterval);
                      window.testimonialInterval = null;
                    }
                  }}
                  onMouseLeave={() => {
-                   // Resume auto-scrolling when mouse leaves
                    if (!window.testimonialInterval) {
                      window.testimonialInterval = setInterval(() => {
                        const container = document.querySelector('.testimonial-carousel');
@@ -636,7 +609,6 @@ function App() {
                          const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                          container.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
                          
-                         // Check if we need to reset position after animation completes
                          setTimeout(() => {
                            const scrollLeft = container.scrollLeft;
                            const totalWidth = container.scrollWidth;
@@ -654,23 +626,18 @@ function App() {
                    }
                  }}
                  onScroll={(e) => {
-                   // Handle infinite scroll effect
                    handleTestimonialInfiniteScroll(e.currentTarget);
                  }}
                  ref={(el) => {
-                   // Set up auto-scrolling when component mounts
                    if (el && !window.testimonialInterval) {
-                     // Initialize previous scroll position
                      el.previousScrollLeft = 0;
                      
-                     // Start auto-scrolling after a short delay
                      setTimeout(() => {
                        window.testimonialInterval = setInterval(() => {
                          if (el) {
                            const testimonialWidth = el.querySelector('.testimonial-card').offsetWidth + 20;
                            el.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
                            
-                           // Check if we need to reset position after animation completes
                            setTimeout(() => {
                              const scrollLeft = el.scrollLeft;
                              const totalWidth = el.scrollWidth;
@@ -680,7 +647,6 @@ function App() {
                                el.scrollLeft = 0;
                              }
                              
-                             // Update active dot
                              handleTestimonialInfiniteScroll(el);
                            }, 500);
                          }
@@ -689,7 +655,6 @@ function App() {
                    }
                  }}
             >
-              {/* First set of testimonials */}
               <div className="testimonial-card">
                 <div className="testimonial-content">
                   <p>"LogiTrans has transformed our supply chain operations. Their reliable service and innovative solutions have helped us reduce costs and improve delivery times."</p>
@@ -729,7 +694,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Duplicate testimonials to create infinite loop effect */}
+              // Duplicate testimonials
               <div className="testimonial-card">
                 <div className="testimonial-content">
                   <p>"LogiTrans has transformed our supply chain operations. Their reliable service and innovative solutions have helped us reduce costs and improve delivery times."</p>
@@ -832,7 +797,7 @@ function App() {
                 <div className="contact-item">
                   <div className="contact-icon location"></div>
                   <div>
-                    <h4>Headquarters</h4>
+                    <h4>Address</h4>
                     <p>123 Logistics Way, Transport City, TC 10001</p>
                   </div>
                 </div>
@@ -906,7 +871,7 @@ function App() {
                 </div>
                 <div className="contact-item">
                   <i className="fas fa-phone-alt"></i>
-                  <span>+1 (555) 123-4567</span>
+                  <span>+62 123 4567</span>
                 </div>
                 <div className="contact-item">
                   <i className="fas fa-envelope"></i>
