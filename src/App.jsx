@@ -18,6 +18,25 @@ function App() {
   
   const [countValues, setCountValues] = useState(statsData.map(stat => stat.start));
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && !event.target.closest('.mobile-menu-toggle') && !event.target.closest('.main-nav')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Close mobile menu when clicking on a link
+  const handleNavLinkClick = () => {
+    setIsMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -223,13 +242,13 @@ function App() {
           
           <nav className={`main-nav ${isMenuOpen ? 'open' : ''}`}>
             <ul>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#products">Products</a></li>
-              <li><a href="#about">About Us</a></li>
-              <li><a href="#clients">Partners</a></li>
-              <li><a href="#network">Network</a></li>
-              <li><a href="#testimonials">Testimonials</a></li>
-              <li><a href="#contact" className="cta-button">Contact Us</a></li>
+              <li><a href="#services" onClick={handleNavLinkClick}>Services</a></li>
+              <li><a href="#products" onClick={handleNavLinkClick}>Products</a></li>
+              <li><a href="#about" onClick={handleNavLinkClick}>About Us</a></li>
+              <li><a href="#clients" onClick={handleNavLinkClick}>Partners</a></li>
+              <li><a href="#network" onClick={handleNavLinkClick}>Network</a></li>
+              <li><a href="#testimonials" onClick={handleNavLinkClick}>Testimonials</a></li>
+              <li><a href="#contact" className="cta-button" onClick={handleNavLinkClick}>Contact Us</a></li>
             </ul>
           </nav>
         </div>
