@@ -308,66 +308,38 @@ function App() {
 
           <div className="products-grid">
             <div className="product-card">
-              <div className="product-image retail"></div>
+              <div className="product-icon retail"></div>
               <div className="product-content">
                 <h3>Retail Logistics</h3>
                 <p>Specialized solutions for retail businesses, including inventory management, warehousing, and last-mile delivery.</p>
                 <a href="#contact" className="product-link">Learn More</a>
               </div>
-              <div className="product-overlay">
-                <div className="overlay-content">
-                  <h3>Retail Logistics</h3>
-                  <p>Our retail logistics solutions help you manage inventory efficiently and deliver products to your customers on time, every time.</p>
-                  <a href="#contact" className="product-button">Get Started</a>
-                </div>
-              </div>
             </div>
 
             <div className="product-card">
-              <div className="product-image ecommerce"></div>
+              <div className="product-icon ecommerce"></div>
               <div className="product-content">
                 <h3>E-Commerce Fulfillment</h3>
                 <p>End-to-end fulfillment services designed specifically for online retailers, with fast shipping options.</p>
                 <a href="#contact" className="product-link">Learn More</a>
               </div>
-              <div className="product-overlay">
-                <div className="overlay-content">
-                  <h3>E-Commerce Fulfillment</h3>
-                  <p>Scale your online business with our comprehensive e-commerce fulfillment services, including warehousing, picking, packing, and shipping.</p>
-                  <a href="#contact" className="product-button">Get Started</a>
-                </div>
-              </div>
             </div>
 
             <div className="product-card">
-              <div className="product-image international"></div>
+              <div className="product-icon international"></div>
               <div className="product-content">
                 <h3>International Shipping</h3>
                 <p>Global shipping solutions with customs clearance expertise and international compliance management.</p>
                 <a href="#contact" className="product-link">Learn More</a>
               </div>
-              <div className="product-overlay">
-                <div className="overlay-content">
-                  <h3>International Shipping</h3>
-                  <p>Expand your business globally with our international shipping solutions that handle customs, compliance, and delivery across borders.</p>
-                  <a href="#contact" className="product-button">Get Started</a>
-                </div>
-              </div>
             </div>
 
             <div className="product-card">
-              <div className="product-image cold-chain"></div>
+              <div className="product-icon cold-chain"></div>
               <div className="product-content">
                 <h3>Cold Chain Logistics</h3>
                 <p>Temperature-controlled transportation and storage for perishable goods and pharmaceuticals.</p>
                 <a href="#contact" className="product-link">Learn More</a>
-              </div>
-              <div className="product-overlay">
-                <div className="overlay-content">
-                  <h3>Cold Chain Logistics</h3>
-                  <p>Maintain product integrity with our temperature-controlled logistics solutions for sensitive items like food, pharmaceuticals, and chemicals.</p>
-                  <a href="#contact" className="product-button">Get Started</a>
-                </div>
               </div>
             </div>
           </div>
