@@ -68,6 +68,10 @@ function App() {
         clearInterval(window.carouselInterval);
         window.carouselInterval = null;
       }
+      if (window.testimonialInterval) {
+        clearInterval(window.testimonialInterval);
+        window.testimonialInterval = null;
+      }
     };
   }, []);
 
@@ -141,28 +145,6 @@ function App() {
     });
   };
 
-  const scrollToSection = (index) => {
-    const container = document.querySelector('.client-logos');
-    if (!container) return;
-    
-    const totalWidth = container.scrollWidth;
-    const logoSetWidth = totalWidth / 2; // Width of one set of logos
-    
-    const sectionWidth = logoSetWidth / 3;
-    
-    // Always scroll within the first set of logos
-    const targetScrollLeft = index * sectionWidth;
-    
-    container.scrollTo({
-      left: targetScrollLeft, 
-      behavior: 'smooth' 
-    });
-    
-    // Update active dot after scrolling completes
-    setTimeout(() => updateActiveDot(container), 500);
-  };
-
-  // Function to create an infinite loop effect
   const handleInfiniteScroll = (container) => {
     if (!container) return;
     
@@ -190,12 +172,47 @@ function App() {
     updateActiveDot(container);
   };
 
+  const handleTestimonialInfiniteScroll = (container) => {
+    if (!container) return;
+    
+    const scrollLeft = container.scrollLeft;
+    const totalWidth = container.scrollWidth;
+    const containerWidth = container.clientWidth;
+    const testimonialSetWidth = totalWidth / 2;
+    
+    // When we reach the end of the first set, jump back to start
+    if (scrollLeft >= testimonialSetWidth - 50) {
+      container.scrollLeft = 0;
+    }
+    
+    // When we go backward past the start, jump to the second set
+    if (scrollLeft <= 0 && container.previousScrollLeft > scrollLeft) {
+      container.scrollLeft = testimonialSetWidth - containerWidth;
+    }
+    
+    container.previousScrollLeft = scrollLeft;
+    
+    // Update active dot
+    const normalizedScrollLeft = scrollLeft % testimonialSetWidth;
+    const cardWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+    const activeIndex = Math.min(Math.floor(normalizedScrollLeft / cardWidth), 2);
+    
+    const dots = document.querySelectorAll('.testimonial-navigation .carousel-dot');
+    dots.forEach((dot, index) => {
+      if (index === activeIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  };
+
   return (
     <div className="app-container">
       {/* Header/Navigation */}
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container header-container">
-          <div className="logo-container">
+          <div className="logo-container" onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
             <img src={logoSvg} alt="LogiTrans Logo" className="logo" />
             <h1>LogiTrans</h1>
           </div>
@@ -465,9 +482,18 @@ function App() {
                 }, 500);
               }}>&lt;</button>
               <div className="carousel-dots">
-                <span className="carousel-dot active" onClick={() => scrollToSection(0)}></span>
-                <span className="carousel-dot" onClick={() => scrollToSection(1)}></span>
-                <span className="carousel-dot" onClick={() => scrollToSection(2)}></span>
+                <span className="carousel-dot active" onClick={() => {
+                  const container = document.querySelector('.client-logos');
+                  container.scrollTo({ left: 0, behavior: 'smooth' });
+                }}></span>
+                <span className="carousel-dot" onClick={() => {
+                  const container = document.querySelector('.client-logos');
+                  container.scrollTo({ left: 220, behavior: 'smooth' });
+                }}></span>
+                <span className="carousel-dot" onClick={() => {
+                  const container = document.querySelector('.client-logos');
+                  container.scrollTo({ left: 440, behavior: 'smooth' });
+                }}></span>
               </div>
               <button className="carousel-button next" onClick={() => {
                 const container = document.querySelector('.client-logos');
@@ -562,45 +588,204 @@ function App() {
       <section id="testimonials" className="testimonials">
         <div className="container">
           <h2 className="section-title">What Our Clients Say</h2>
-          
-          <div className="testimonial-grid">
-            <div className="testimonial-card">
-              <div className="testimonial-content">
-                <p>"LogiTrans has transformed our supply chain operations. Their reliable service and innovative solutions have helped us reduce costs and improve delivery times."</p>
+
+          <div className="testimonial-carousel-container">
+            <div className="testimonial-carousel"
+                 onMouseEnter={() => {
+                   // Stop auto-scrolling when mouse enters
+                   if (window.testimonialInterval) {
+                     clearInterval(window.testimonialInterval);
+                     window.testimonialInterval = null;
+                   }
+                 }}
+                 onMouseLeave={() => {
+                   // Resume auto-scrolling when mouse leaves
+                   if (!window.testimonialInterval) {
+                     window.testimonialInterval = setInterval(() => {
+                       const container = document.querySelector('.testimonial-carousel');
+                       if (container) {
+                         const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                         container.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
+                         
+                         // Check if we need to reset position after animation completes
+                         setTimeout(() => {
+                           const scrollLeft = container.scrollLeft;
+                           const totalWidth = container.scrollWidth;
+                           const testimonialSetWidth = totalWidth / 2;
+                           
+                           if (scrollLeft >= testimonialSetWidth - 50) {
+                             container.scrollLeft = 0;
+                           }
+                           
+                           // Update active dot
+                           handleTestimonialInfiniteScroll(container);
+                         }, 500);
+                       }
+                     }, 3000);
+                   }
+                 }}
+                 onScroll={(e) => {
+                   // Handle infinite scroll effect
+                   handleTestimonialInfiniteScroll(e.currentTarget);
+                 }}
+                 ref={(el) => {
+                   // Set up auto-scrolling when component mounts
+                   if (el && !window.testimonialInterval) {
+                     // Initialize previous scroll position
+                     el.previousScrollLeft = 0;
+                     
+                     // Start auto-scrolling after a short delay
+                     setTimeout(() => {
+                       window.testimonialInterval = setInterval(() => {
+                         if (el) {
+                           const testimonialWidth = el.querySelector('.testimonial-card').offsetWidth + 30;
+                           el.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
+                           
+                           // Check if we need to reset position after animation completes
+                           setTimeout(() => {
+                             const scrollLeft = el.scrollLeft;
+                             const totalWidth = el.scrollWidth;
+                             const testimonialSetWidth = totalWidth / 2;
+                             
+                             if (scrollLeft >= testimonialSetWidth - 50) {
+                               el.scrollLeft = 0;
+                             }
+                             
+                             // Update active dot
+                             handleTestimonialInfiniteScroll(el);
+                           }, 500);
+                         }
+                       }, 3000);
+                     }, 1000);
+                   }
+                 }}
+            >
+              {/* First set of testimonials */}
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"LogiTrans has transformed our supply chain operations. Their reliable service and innovative solutions have helped us reduce costs and improve delivery times."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Sarah Johnson</h4>
+                    <p>Supply Chain Director, TechCorp Inc.</p>
+                  </div>
+                </div>
               </div>
-              <div className="testimonial-author">
-                <div className="author-image"></div>
-                <div className="author-info">
-                  <h4>Sarah Johnson</h4>
-                  <p>Supply Chain Director, TechCorp Inc.</p>
+
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"We've been working with LogiTrans for over 5 years now. Their customs clearance expertise has been invaluable for our international expansion."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Michael Chen</h4>
+                    <p>CEO, Global Traders Ltd.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"The real-time tracking and 24/7 support from LogiTrans gives us peace of mind. We always know where our shipments are and when they'll arrive."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Elena Rodriguez</h4>
+                    <p>Operations Manager, Fresh Foods Co.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Duplicate testimonials to create infinite loop effect */}
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"LogiTrans has transformed our supply chain operations. Their reliable service and innovative solutions have helped us reduce costs and improve delivery times."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Sarah Johnson</h4>
+                    <p>Supply Chain Director, TechCorp Inc.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"We've been working with LogiTrans for over 5 years now. Their customs clearance expertise has been invaluable for our international expansion."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Michael Chen</h4>
+                    <p>CEO, Global Traders Ltd.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <div className="testimonial-content">
+                  <p>"The real-time tracking and 24/7 support from LogiTrans gives us peace of mind. We always know where our shipments are and when they'll arrive."</p>
+                </div>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-info">
+                    <h4>Elena Rodriguez</h4>
+                    <p>Operations Manager, Fresh Foods Co.</p>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            <div className="testimonial-card">
-              <div className="testimonial-content">
-                <p>"We've been working with LogiTrans for over 5 years now. Their customs clearance expertise has been invaluable for our international expansion."</p>
+
+            <div className="carousel-navigation testimonial-navigation">
+              <button className="carousel-button prev" onClick={() => {
+                const container = document.querySelector('.testimonial-carousel');
+                if (container) {
+                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                  container.scrollBy({ left: -testimonialWidth, behavior: 'smooth' });
+                  
+                  setTimeout(() => {
+                    handleTestimonialInfiniteScroll(container);
+                  }, 500);
+                }
+              }}>&lt;</button>
+              <div className="carousel-dots">
+                <span className="carousel-dot active" onClick={() => {
+                  const container = document.querySelector('.testimonial-carousel');
+                  if (container) {
+                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                  }
+                }}></span>
+                <span className="carousel-dot" onClick={() => {
+                  const container = document.querySelector('.testimonial-carousel');
+                  if (container) {
+                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                    container.scrollTo({ left: testimonialWidth, behavior: 'smooth' });
+                  }
+                }}></span>
+                <span className="carousel-dot" onClick={() => {
+                  const container = document.querySelector('.testimonial-carousel');
+                  if (container) {
+                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                    container.scrollTo({ left: testimonialWidth * 2, behavior: 'smooth' });
+                  }
+                }}></span>
               </div>
-              <div className="testimonial-author">
-                <div className="author-image"></div>
-                <div className="author-info">
-                  <h4>Michael Chen</h4>
-                  <p>CEO, Global Traders Ltd.</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="testimonial-card">
-              <div className="testimonial-content">
-                <p>"The real-time tracking and 24/7 support from LogiTrans gives us peace of mind. We always know where our shipments are and when they'll arrive."</p>
-              </div>
-              <div className="testimonial-author">
-                <div className="author-image"></div>
-                <div className="author-info">
-                  <h4>Elena Rodriguez</h4>
-                  <p>Operations Manager, Fresh Foods Co.</p>
-                </div>
-              </div>
+              <button className="carousel-button next" onClick={() => {
+                const container = document.querySelector('.testimonial-carousel');
+                if (container) {
+                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                  container.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
+                  
+                  setTimeout(() => {
+                    handleTestimonialInfiniteScroll(container);
+                  }, 500);
+                }
+              }}>&gt;</button>
             </div>
           </div>
         </div>

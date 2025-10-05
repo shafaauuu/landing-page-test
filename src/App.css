@@ -143,6 +143,11 @@ button, .primary-button, .secondary-button {
 .logo-container {
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
 }
 
 .logo-container img {
@@ -775,67 +780,188 @@ button, .primary-button, .secondary-button {
 
 /* Testimonials Section */
 .testimonials {
-  padding: 100px 0;
-  background-color: white;
+  padding: 80px 0;
+  background-color: var(--light-color);
   text-align: center;
+}
+
+.testimonial-carousel-container {
+  position: relative;
+  margin-top: 50px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
   width: 100%;
 }
 
-.testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.testimonial-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0;
+  -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none;  /* Hide scrollbar for Firefox */
   gap: 30px;
-  margin-top: 50px;
+  position: relative;
+  width: 100%;
+  scroll-snap-type: x mandatory;
+  margin-bottom: 20px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.testimonial-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .testimonial-card {
-  background-color: var(--light-color);
-  border-radius: var(--border-radius);
+  background-color: white;
+  border-radius: 10px;
   padding: 30px;
-  text-align: left;
   box-shadow: var(--box-shadow);
-  transition: var(--transition);
+  min-width: 300px;
+  max-width: 350px;
+  flex: 0 0 auto;
+  margin: 0 15px;
+  transition: all 0.3s ease;
+  scroll-snap-align: center;
+  opacity: 0;
+  animation: fadeInUp 0.5s forwards;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 280px;
+}
+
+/* Staggered animation for each testimonial */
+.testimonial-carousel .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
+.testimonial-carousel .testimonial-card:nth-child(2) { animation-delay: 0.2s; }
+.testimonial-carousel .testimonial-card:nth-child(3) { animation-delay: 0.3s; }
+/* Only animate the first set of testimonials */
+.testimonial-carousel .testimonial-card:nth-child(n+4) { 
+  opacity: 1;
+  animation: none;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
 .testimonial-content {
   margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.testimonial-content p {
+  font-style: italic;
+  color: var(--dark-color);
+  line-height: 1.6;
   position: relative;
 }
 
-.testimonial-content::before {
+.testimonial-content p::before,
+.testimonial-content p::after {
   content: '"';
+  font-size: 2rem;
+  color: var(--secondary-color);
   position: absolute;
-  top: -20px;
+  opacity: 0.5;
+}
+
+.testimonial-content p::before {
+  top: -15px;
   left: -10px;
-  font-size: 4rem;
-  color: rgba(0, 86, 179, 0.2);
-  font-family: Georgia, serif;
+}
+
+.testimonial-content p::after {
+  bottom: -25px;
+  right: -10px;
 }
 
 .testimonial-author {
   display: flex;
   align-items: center;
+  margin-top: auto;
 }
 
 .author-image {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--gray-color);
+  background-color: var(--light-gray);
   margin-right: 15px;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.testimonial-card:nth-child(1) .author-image,
+.testimonial-card:nth-child(4) .author-image {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='40' r='25' fill='%23ff9e00'/%3E%3Ccircle cx='50' cy='95' r='35' fill='%23ff9e00'/%3E%3C/svg%3E");
+  background-color: #f8d7da;
+}
+
+.testimonial-card:nth-child(2) .author-image,
+.testimonial-card:nth-child(5) .author-image {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='40' r='25' fill='%230056b3'/%3E%3Ccircle cx='50' cy='95' r='35' fill='%230056b3'/%3E%3C/svg%3E");
+  background-color: #d1ecf1;
+}
+
+.testimonial-card:nth-child(3) .author-image,
+.testimonial-card:nth-child(6) .author-image {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='40' r='25' fill='%23e71d36'/%3E%3Ccircle cx='50' cy='95' r='35' fill='%23e71d36'/%3E%3C/svg%3E");
+  background-color: #f8f9fa;
 }
 
 .author-info h4 {
-  margin-bottom: 5px;
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.1rem;
 }
 
 .author-info p {
+  margin: 5px 0 0;
   color: var(--gray-color);
   font-size: 0.9rem;
+}
+
+.testimonial-navigation {
+  margin-top: 30px;
+}
+
+/* Responsive styles for testimonial carousel */
+@media (max-width: 992px) {
+  .testimonial-card {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial-card {
+    min-width: 260px;
+    padding: 20px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .testimonial-card {
+    min-width: 220px;
+    height: 320px;
+  }
+  
+  .testimonial-content p {
+    font-size: 0.9rem;
+  }
+  
+  .author-image {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 /* Contact Section */
@@ -893,11 +1019,11 @@ button, .primary-button, .secondary-button {
 }
 
 .contact-icon.phone::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%230056b3'%3E%3Cpath d='M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%230056b3'%3E%3Cpath d='M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-14.2 20.8-32.2 39.3-52.6 54.3z'/%3E%3C/svg%3E");
 }
 
 .contact-icon.email::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%230056b3'%3E%3Cpath d='M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%230056b3'%3E%3Cpath d='M502.3 190c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z'/%3E%3C/svg%3E");
 }
 
 .contact-item h4 {
