@@ -6,6 +6,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [isBackToTopVisible, setIsBackToTopVisible] = useState(false);
   const statsRef = useRef(null);
   
   // Stats data with start and end values
@@ -25,6 +26,13 @@ function App() {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
+      }
+
+      // Show back to top button when scrolled down 500px
+      if (window.scrollY > 500) {
+        setIsBackToTopVisible(true);
+      } else {
+        setIsBackToTopVisible(false);
       }
     };
 
@@ -204,6 +212,13 @@ function App() {
       } else {
         dot.classList.remove('active');
       }
+    });
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
   };
 
@@ -892,6 +907,11 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* Back to Top Button */}
+      <button className={`back-to-top ${isBackToTopVisible ? 'visible' : ''}`} onClick={scrollToTop}>
+        <span>&#8593;</span>
+      </button>
 
       {/* Footer */}
       <footer className="footer">
