@@ -8,8 +8,7 @@ function App() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [isBackToTopVisible, setIsBackToTopVisible] = useState(false);
   const statsRef = useRef(null);
-  
-  // Stats data with start and end values
+
   const statsData = [
     { start: 0, end: 15, suffix: '+', label: 'Years Experience' },
     { start: 0, end: 75, suffix: '+', label: 'Countries' },
@@ -17,7 +16,6 @@ function App() {
     { start: 0, end: 98, suffix: '%', label: 'Client Satisfaction' }
   ];
   
-  // State to track the current count values
   const [countValues, setCountValues] = useState(statsData.map(stat => stat.start));
 
   useEffect(() => {
@@ -28,7 +26,6 @@ function App() {
         setIsScrolled(false);
       }
 
-      // Show back to top button when scrolled down 500px
       if (window.scrollY > 500) {
         setIsBackToTopVisible(true);
       } else {
@@ -40,21 +37,18 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Set up intersection observer for stats section
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setStatsVisible(true);
-          // Reset count values to start the animation again
           setCountValues(statsData.map(stat => stat.start));
         } else {
-          // When scrolling away, reset the visibility state
           setStatsVisible(false);
         }
       },
-      { threshold: 0.3 } // Trigger when 30% of the element is visible
+      { threshold: 0.3 }
     );
 
     const currentStatsRef = statsRef.current;
@@ -69,7 +63,6 @@ function App() {
     };
   }, []);
 
-  // Clean up carousel interval when component unmounts
   useEffect(() => {
     return () => {
       if (window.carouselInterval) {
@@ -83,15 +76,13 @@ function App() {
     };
   }, []);
 
-  // Handle the counting animation when stats become visible
   useEffect(() => {
     if (!statsVisible) return;
 
-    const duration = 2000; // Animation duration in milliseconds
+    const duration = 2000;
     const frameDuration = 1000 / 60; // 60fps
     const totalFrames = Math.round(duration / frameDuration);
 
-    // Create separate counters for each stat with staggered delays
     const counters = statsData.map((stat, index) => {
       const delay = index * 300; // 300ms delay between each stat starting
       
@@ -102,7 +93,7 @@ function App() {
           statFrame++;
           
           const progress = statFrame / totalFrames;
-          const easeOutQuad = progress * (2 - progress); // Easing function for smoother animation
+          const easeOutQuad = progress * (2 - progress);
           
           const value = stat.start + Math.floor(easeOutQuad * (stat.end - stat.start));
           
@@ -122,7 +113,6 @@ function App() {
     });
 
     return () => {
-      // Clear all timeouts and intervals
       counters.forEach(timerId => clearTimeout(timerId));
     };
   }, [statsVisible]);
@@ -137,11 +127,10 @@ function App() {
     
     const normalizedScrollLeft = scrollLeft % logoSetWidth;
     
-    // Calculate the section based on the normalized position
-    const sectionWidth = logoSetWidth / 3; // 3 sections per set
+    const sectionWidth = logoSetWidth / 3;
     const activeIndex = Math.min(
       Math.floor(normalizedScrollLeft / sectionWidth),
-      2 // Max index is 2 (0-based for 3 sections)
+      2
     );
     
     dots.forEach((dot, index) => {
@@ -159,24 +148,18 @@ function App() {
     const scrollLeft = container.scrollLeft;
     const totalWidth = container.scrollWidth;
     
-    // Get the width of one set of logos (5 logos)
-    const logoSetWidth = totalWidth / 2; // We have 2 identical sets of logos
+    const logoSetWidth = totalWidth / 2; //identical
     
-    // If we're at the end of the second set, jump back to the first set
     if (scrollLeft > logoSetWidth) {
-      // Jump to the equivalent position in the first set
       container.scrollLeft = scrollLeft - logoSetWidth;
     }
     
-    // If we're at the beginning and scrolling backward, jump to the second set
     if (scrollLeft < 10 && scrollLeft < container.previousScrollLeft) {
       container.scrollLeft = logoSetWidth + scrollLeft;
     }
     
-    // Store the current scroll position for direction detection
     container.previousScrollLeft = container.scrollLeft;
     
-    // Update the active dot based on scroll position
     updateActiveDot(container);
   };
 
@@ -397,7 +380,7 @@ function App() {
                     const container = document.querySelector('.client-logos');
                     if (container) {
                       // Get the width of one logo item (including gap)
-                      const logoWidth = 220; // logo width + gap
+                      const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190; // logo width + gap
                       
                       // Simply scroll one logo at a time
                       container.scrollBy({ left: logoWidth, behavior: 'smooth' });
@@ -429,7 +412,7 @@ function App() {
                   window.carouselInterval = setInterval(() => {
                     if (el) {
                       // Get the width of one logo item (including gap)
-                      const logoWidth = 220; // logo width + gap
+                      const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190; // logo width + gap
                       
                       // Simply scroll one logo at a time
                       el.scrollBy({ left: logoWidth, behavior: 'smooth' });
@@ -495,7 +478,8 @@ function App() {
               <button className="carousel-button prev" onClick={() => {
                 const container = document.querySelector('.client-logos');
                 // Scroll exactly one logo width to the left
-                container.scrollBy({ left: -220, behavior: 'smooth' });
+                const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
+                container.scrollBy({ left: -logoWidth, behavior: 'smooth' });
                 
                 // After scrolling, check if we need to handle the infinite loop
                 setTimeout(() => {
@@ -511,17 +495,20 @@ function App() {
                 }}></span>
                 <span className="carousel-dot" onClick={() => {
                   const container = document.querySelector('.client-logos');
-                  container.scrollTo({ left: 220, behavior: 'smooth' });
+                  const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
+                  container.scrollTo({ left: logoWidth * 2, behavior: 'smooth' });
                 }}></span>
                 <span className="carousel-dot" onClick={() => {
                   const container = document.querySelector('.client-logos');
-                  container.scrollTo({ left: 440, behavior: 'smooth' });
+                  const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
+                  container.scrollTo({ left: logoWidth * 4, behavior: 'smooth' });
                 }}></span>
               </div>
               <button className="carousel-button next" onClick={() => {
                 const container = document.querySelector('.client-logos');
                 // Scroll exactly one logo width to the right
-                container.scrollBy({ left: 220, behavior: 'smooth' });
+                const logoWidth = window.innerWidth <= 576 ? 125 : window.innerWidth <= 768 ? 150 : 190;
+                container.scrollBy({ left: logoWidth, behavior: 'smooth' });
                 
                 // After scrolling, check if we need to handle the infinite loop
                 setTimeout(() => {
@@ -627,7 +614,7 @@ function App() {
                      window.testimonialInterval = setInterval(() => {
                        const container = document.querySelector('.testimonial-carousel');
                        if (container) {
-                         const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                         const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                          container.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
                          
                          // Check if we need to reset position after animation completes
@@ -661,7 +648,7 @@ function App() {
                      setTimeout(() => {
                        window.testimonialInterval = setInterval(() => {
                          if (el) {
-                           const testimonialWidth = el.querySelector('.testimonial-card').offsetWidth + 30;
+                           const testimonialWidth = el.querySelector('.testimonial-card').offsetWidth + 20;
                            el.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
                            
                            // Check if we need to reset position after animation completes
@@ -768,7 +755,7 @@ function App() {
               <button className="carousel-button prev" onClick={() => {
                 const container = document.querySelector('.testimonial-carousel');
                 if (container) {
-                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                   container.scrollBy({ left: -testimonialWidth, behavior: 'smooth' });
                   
                   setTimeout(() => {
@@ -786,14 +773,14 @@ function App() {
                 <span className="carousel-dot" onClick={() => {
                   const container = document.querySelector('.testimonial-carousel');
                   if (container) {
-                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                     container.scrollTo({ left: testimonialWidth, behavior: 'smooth' });
                   }
                 }}></span>
                 <span className="carousel-dot" onClick={() => {
                   const container = document.querySelector('.testimonial-carousel');
                   if (container) {
-                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                    const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                     container.scrollTo({ left: testimonialWidth * 2, behavior: 'smooth' });
                   }
                 }}></span>
@@ -801,7 +788,7 @@ function App() {
               <button className="carousel-button next" onClick={() => {
                 const container = document.querySelector('.testimonial-carousel');
                 if (container) {
-                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 30;
+                  const testimonialWidth = container.querySelector('.testimonial-card').offsetWidth + 20;
                   container.scrollBy({ left: testimonialWidth, behavior: 'smooth' });
                   
                   setTimeout(() => {
