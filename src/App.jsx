@@ -879,7 +879,47 @@ function App() {
             <div className="footer-logo">
               <img src={logoSvg} alt="LogiTrans Logo" className="logo" />
               <h2>LogiTrans</h2>
-              <p>Global logistics solutions for modern businesses</p>
+              <p>Global logistics solutions for modern businesses. Delivering excellence across continents since 2010.</p>
+              <div className="footer-contact-info">
+                <div className="contact-item">
+                  <i className="fas fa-map-marker-alt"></i>
+                  <span>123 Logistics Way, Business District</span>
+                </div>
+                <div className="contact-item">
+                  <i className="fas fa-phone-alt"></i>
+                  <span>+1 (555) 123-4567</span>
+                </div>
+                <div className="contact-item">
+                  <i className="fas fa-envelope"></i>
+                  <span>info@logitrans.com</span>
+                </div>
+              </div>
+              
+              {/* Mobile Quote Request Form */}
+              <div className="mobile-quote-request">
+                <h3>Request a Quote</h3>
+                <form className="mobile-quote-form">
+                  <div className="form-group">
+                    <input type="text" placeholder="Your Name" required />
+                  </div>
+                  <div className="form-group">
+                    <input type="email" placeholder="Your Email" required />
+                  </div>
+                  <div className="form-group">
+                    <input type="tel" placeholder="Phone Number" />
+                  </div>
+                  <div className="form-group">
+                    <select>
+                      <option value="" disabled selected>Service Type</option>
+                      <option value="freight">Freight Forwarding</option>
+                      <option value="warehouse">Warehousing</option>
+                      <option value="customs">Customs Clearance</option>
+                      <option value="supply">Supply Chain Solutions</option>
+                    </select>
+                  </div>
+                  <button type="submit">Submit Request</button>
+                </form>
+              </div>
             </div>
             
             <div className="footer-links">
@@ -890,6 +930,7 @@ function App() {
                   <li><a href="#services">Warehousing</a></li>
                   <li><a href="#services">Customs Clearance</a></li>
                   <li><a href="#services">Supply Chain</a></li>
+                  <li><a href="#services">Last Mile Delivery</a></li>
                 </ul>
               </div>
               
@@ -900,6 +941,7 @@ function App() {
                   <li><a href="#network">Our Network</a></li>
                   <li><a href="#clients">Our Partners</a></li>
                   <li><a href="#">Careers</a></li>
+                  <li><a href="#">Sustainability</a></li>
                 </ul>
               </div>
               
@@ -910,6 +952,7 @@ function App() {
                   <li><a href="#">FAQ</a></li>
                   <li><a href="#">Track Shipment</a></li>
                   <li><a href="#">Resources</a></li>
+                  <li><a href="#">Terms & Conditions</a></li>
                 </ul>
               </div>
             </div>
@@ -918,12 +961,17 @@ function App() {
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} LogiTrans. All rights reserved.</p>
             <div className="social-links">
-              <a href="#" className="social-icon facebook"></a>
-              <a href="#" className="social-icon twitter"></a>
-              <a href="#" className="social-icon linkedin"></a>
-              <a href="#" className="social-icon instagram"></a>
+              <a href="#" className="social-icon facebook"><i className="fab fa-facebook-f"></i></a>
+              <a href="#" className="social-icon twitter"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="social-icon linkedin"><i className="fab fa-linkedin-in"></i></a>
+              <a href="#" className="social-icon instagram"><i className="fab fa-instagram"></i></a>
             </div>
           </div>
+        </div>
+        
+        <div className="footer-decoration">
+          <div className="decoration-circle circle-1"></div>
+          <div className="decoration-circle circle-2"></div>
         </div>
       </footer>
     </div>
